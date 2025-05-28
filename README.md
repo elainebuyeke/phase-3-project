@@ -18,8 +18,8 @@ AquaTrack is a simple Python CLI app that helps coaches and swim teams manage sw
 Setup
 
 {bash}
-pipenv install
-pipenv shell
-python lib/seed.py  (populate the database)
-python lib/cli.py   (run the application)
+- pipenv install
+- pipenv shell
+- python lib/seed.py  (populate the database)
+- python lib/cli.py   (run the application)
 
