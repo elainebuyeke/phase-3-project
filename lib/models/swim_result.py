@@ -13,5 +13,4 @@ class SwimResult(Base):
     swimmer_id = Column(Integer, ForeignKey('swimmers.id'))
     swimmer = relationship("Swimmer", back_populates="results")
 
-    def __repr__(self):
-        return f"<Result: {self.event} - {self.time}s at {self.meet_name}>"
+   

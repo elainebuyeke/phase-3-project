@@ -10,8 +10,4 @@ class Swimmer(Base):
     age = Column(Integer)
     team = Column(String)
 
-
-    results = relationship("SwimResult", back_populates="swimmer", cascade="all, delete")
-
-    def __repr__(self):
-        return f"<Swimmer {self.name}, Age {self.age}, Team {self.team}>"
+results = relationship("SwimResult", back_populates="swimmer", cascade="all, delete-orphan")

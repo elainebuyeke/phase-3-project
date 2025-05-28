@@ -1,10 +1,18 @@
-from models.base import session
-from models.swimmer import Swimmer
-from models.swim_result import SwimResult
+from helpers import (
+    get_all_swimmers,
+    find_swimmer_by_id,
+    create_swimmer,
+    delete_swimmer,
+    get_all_results,
+    create_result,
+    is_positive_int,
+    print_error,
+    print_success,
+)
 
 def main_menu():
     while True:
-        print(" Welcome to AquaTrack ")
+        print("Welcome to AquaTrack ")
         print("1. View all swimmers")
         print("2. Add a new swimmer")
         print("3. Delete a swimmer")
@@ -28,47 +36,52 @@ def main_menu():
             print("Goodbye!")
             exit()
         else:
-            print("Invalid choice. Please enter a number between 1 and 6.")
-
+            print_error("Invalid choice. Please enter a number between 1 and 6.")
 
 def view_all_swimmers():
-    swimmers = session.query(Swimmer).all()
+    swimmers = get_all_swimmers()
     if not swimmers:
         print("No swimmers found.")
-    for swimmer in swimmers:
-        print(f"{swimmer.id}: {swimmer.name} (Age: {swimmer.age}, Team: {swimmer.team})")
+    else:
+        for s in swimmers:
+            print(f"{s.id}: {s.name} (Age: {s.age}, Team: {s.team})")
 
 def add_swimmer():
     name = input("Enter swimmer name: ")
     age = input("Enter age: ")
     team = input("Enter team: ")
 
-    if not age.isdigit():
-        print("Age must be a number.")
+    if not is_positive_int(age):
+        print_error("Age must be a positive number.")
         return
 
-    swimmer = Swimmer(name=name, age=int(age), team=team)
-    session.add(swimmer)
-    session.commit()
-    print(f"Swimmer '{name}' added successfully!")
+    swimmer = create_swimmer(name, int(age), team)
+    print_success(f"Swimmer '{swimmer.name}' added successfully!")
 
 def delete_swimmer():
     view_all_swimmers()
     id = input("Enter the ID of the swimmer to delete: ")
-    swimmer = session.query(Swimmer).get(id)
 
+    if not is_positive_int(id):
+        print_error("ID must be a positive number.")
+        return
+
+    swimmer = find_swimmer_by_id(int(id))
     if swimmer:
-        session.delete(swimmer)
-        session.commit()
-        print(f"Swimmer '{swimmer.name}' deleted.")
+        delete_swimmer(swimmer)
+        print_success(f"Swimmer '{swimmer.name}' deleted.")
     else:
-        print("Swimmer not found.")
+        print_error("Swimmer not found.")
 
 def view_results():
     view_all_swimmers()
     id = input("Enter swimmer ID to view their results: ")
-    swimmer = session.query(Swimmer).get(id)
 
+    if not is_positive_int(id):
+        print_error("ID must be a positive number.")
+        return
+
+    swimmer = find_swimmer_by_id(int(id))
     if swimmer:
         print(f"\nResults for {swimmer.name}:")
         if swimmer.results:
@@ -77,30 +90,32 @@ def view_results():
         else:
             print("No results found.")
     else:
-        print("Swimmer not found.")
+        print_error("Swimmer not found.")
 
 def add_result():
     view_all_swimmers()
     id = input("Enter swimmer ID to add a result: ")
-    swimmer = session.query(Swimmer).get(id)
 
+    if not is_positive_int(id):
+        print_error("ID must be a positive number.")
+        return
+
+    swimmer = find_swimmer_by_id(int(id))
     if swimmer:
         event = input("Enter event name (e.g. '100m Freestyle'): ")
         time = input("Enter time (in seconds): ")
         meet = input("Enter meet name: ")
 
         try:
-            time = float(time)
+            time_val = float(time)
         except ValueError:
-            print("Time must be a number.")
+            print_error("Time must be a number.")
             return
 
-        result = SwimResult(event=event, time=time, meet_name=meet, swimmer=swimmer)
-        session.add(result)
-        session.commit()
-        print(f"Result added for {swimmer.name}!")
+        create_result(event, time_val, meet, swimmer)
+        print_success(f"Result added for {swimmer.name}!")
     else:
-        print("Swimmer not found.")
+        print_error("Swimmer not found.")
 
 if __name__ == "__main__":
     main_menu()
