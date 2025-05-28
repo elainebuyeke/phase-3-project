@@ -13,4 +13,7 @@ class SwimResult(Base):
     swimmer_id = Column(Integer, ForeignKey('swimmers.id'))
     swimmer = relationship("Swimmer", back_populates="results")
 
+
+    def __repr__(self):
+        return f"<SwimResult(id={self.id}, event='{self.event}', time={self.time})>"
    

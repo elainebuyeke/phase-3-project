@@ -1,19 +1,27 @@
-from models.base import session
+from models.base import Base, engine, session
 from models.swimmer import Swimmer
 from models.swim_result import SwimResult
 
-session.query(SwimResult).delete()
-session.query(Swimmer).delete()
+def seed():
 
-swimmer1 = Swimmer(name="Elaine Buyeke", age=18, team="Blue Sharks")
-swimmer2 = Swimmer(name="Tyra Mwai", age=18, team="Wave Warriors")
+    Base.metadata.create_all(engine)
 
-result1 = SwimResult(event="100m Freestyle", time=58.5, meet_name="City Meet", swimmer=swimmer1)
-result2 = SwimResult(event="50m Backstroke", time=31.2, meet_name="State Champs", swimmer=swimmer1)
-result3 = SwimResult(event="200m IM", time=142.3, meet_name="Regional Finals", swimmer=swimmer2)
+    session.query(SwimResult).delete()
+    session.query(Swimmer).delete()
+    session.commit()
 
-session.add_all([swimmer1, swimmer2, result1, result2, result3])
+    swimmer1 = Swimmer(name="Elaine Buyeke", age=18, team="Blue Sharks")
+    swimmer2 = Swimmer(name="Tyra Mwai", age=18, team="Wave Warriors")
 
-session.commit()
+    result1 = SwimResult(event="100m Freestyle", time=58.5, meet_name="City Meet", swimmer=swimmer1)
+    result2 = SwimResult(event="50m Backstroke", time=31.2, meet_name="State Champs", swimmer=swimmer1)
+    result3 = SwimResult(event="200m IM", time=142.3, meet_name="Regional Finals", swimmer=swimmer2)
 
-print("Seed data inserted successfully!")
+    session.add_all([swimmer1, swimmer2, result1, result2, result3])
+
+    session.commit()
+
+    print("Seed data inserted successfully!")
+
+if __name__ == "__main__":
+    seed()
