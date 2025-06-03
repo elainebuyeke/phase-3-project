@@ -27,7 +27,7 @@ def main_menu():
         elif choice == "2":
             add_swimmer()
         elif choice == "3":
-            delete_swimmer()
+            delete_swimmer_menu()
         elif choice == "4":
             view_results()
         elif choice == "5":
@@ -58,7 +58,7 @@ def add_swimmer():
     swimmer = create_swimmer(name, int(age), team)
     print_success(f"Swimmer '{swimmer.name}' added successfully!")
 
-def delete_swimmer():
+def delete_swimmer_menu():
     view_all_swimmers()
     id = input("Enter the ID of the swimmer to delete: ")
 
