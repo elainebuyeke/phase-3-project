@@ -23,3 +23,4 @@ Setup
 - python lib/seed.py  (populate the database)
 - python lib/cli.py   (run the application)
 
+(in my recording the delete funcion wasnt working but I fixed it after)
